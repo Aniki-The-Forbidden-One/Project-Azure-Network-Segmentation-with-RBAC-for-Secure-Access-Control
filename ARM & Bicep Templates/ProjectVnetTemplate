@@ -1,0 +1,176 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "virtualNetworks_ProjectVnet_name": {
+            "defaultValue": "ProjectVnet",
+            "type": "String"
+        },
+        "networkSecurityGroups_Management_NSG_externalid": {
+            "defaultValue": "/subscriptions/9d8c6a3b-f0cb-4e14-8d3c-8ce64b81b250/resourceGroups/AzureProject/providers/Microsoft.Network/networkSecurityGroups/Management_NSG",
+            "type": "String"
+        },
+        "networkSecurityGroups_Database_NSG_externalid": {
+            "defaultValue": "/subscriptions/9d8c6a3b-f0cb-4e14-8d3c-8ce64b81b250/resourceGroups/AzureProject/providers/Microsoft.Network/networkSecurityGroups/Database_NSG",
+            "type": "String"
+        },
+        "networkSecurityGroups_App_NSG_externalid": {
+            "defaultValue": "/subscriptions/9d8c6a3b-f0cb-4e14-8d3c-8ce64b81b250/resourceGroups/AzureProject/providers/Microsoft.Network/networkSecurityGroups/App_NSG",
+            "type": "String"
+        }
+    },
+    "variables": {},
+    "resources": [
+        {
+            "type": "Microsoft.Network/virtualNetworks",
+            "apiVersion": "2024-01-01",
+            "name": "[parameters('virtualNetworks_ProjectVnet_name')]",
+            "location": "uksouth",
+            "properties": {
+                "addressSpace": {
+                    "addressPrefixes": [
+                        "10.1.0.0/16"
+                    ]
+                },
+                "encryption": {
+                    "enabled": false,
+                    "enforcement": "AllowUnencrypted"
+                },
+                "subnets": [
+                    {
+                        "name": "Management_Subnet",
+                        "id": "[resourceId('Microsoft.Network/virtualNetworks/subnets', parameters('virtualNetworks_ProjectVnet_name'), 'Management_Subnet')]",
+                        "properties": {
+                            "addressPrefixes": [
+                                "10.1.3.0/24"
+                            ],
+                            "networkSecurityGroup": {
+                                "id": "[parameters('networkSecurityGroups_Management_NSG_externalid')]"
+                            },
+                            "delegations": [],
+                            "privateEndpointNetworkPolicies": "Disabled",
+                            "privateLinkServiceNetworkPolicies": "Enabled"
+                        },
+                        "type": "Microsoft.Network/virtualNetworks/subnets"
+                    },
+                    {
+                        "name": "Database_Subnet",
+                        "id": "[resourceId('Microsoft.Network/virtualNetworks/subnets', parameters('virtualNetworks_ProjectVnet_name'), 'Database_Subnet')]",
+                        "properties": {
+                            "addressPrefixes": [
+                                "10.1.2.0/24"
+                            ],
+                            "networkSecurityGroup": {
+                                "id": "[parameters('networkSecurityGroups_Database_NSG_externalid')]"
+                            },
+                            "delegations": [],
+                            "privateEndpointNetworkPolicies": "Disabled",
+                            "privateLinkServiceNetworkPolicies": "Enabled"
+                        },
+                        "type": "Microsoft.Network/virtualNetworks/subnets"
+                    },
+                    {
+                        "name": "App_Subnet",
+                        "id": "[resourceId('Microsoft.Network/virtualNetworks/subnets', parameters('virtualNetworks_ProjectVnet_name'), 'App_Subnet')]",
+                        "properties": {
+                            "addressPrefixes": [
+                                "10.1.1.0/24"
+                            ],
+                            "networkSecurityGroup": {
+                                "id": "[parameters('networkSecurityGroups_App_NSG_externalid')]"
+                            },
+                            "delegations": [],
+                            "privateEndpointNetworkPolicies": "Disabled",
+                            "privateLinkServiceNetworkPolicies": "Enabled"
+                        },
+                        "type": "Microsoft.Network/virtualNetworks/subnets"
+                    },
+                    {
+                        "name": "AzureBastionSubnet",
+                        "id": "[resourceId('Microsoft.Network/virtualNetworks/subnets', parameters('virtualNetworks_ProjectVnet_name'), 'AzureBastionSubnet')]",
+                        "properties": {
+                            "addressPrefix": "10.1.4.0/26",
+                            "delegations": [],
+                            "privateEndpointNetworkPolicies": "Disabled",
+                            "privateLinkServiceNetworkPolicies": "Enabled"
+                        },
+                        "type": "Microsoft.Network/virtualNetworks/subnets"
+                    }
+                ],
+                "virtualNetworkPeerings": [],
+                "enableDdosProtection": false
+            }
+        },
+        {
+            "type": "Microsoft.Network/virtualNetworks/subnets",
+            "apiVersion": "2024-01-01",
+            "name": "[concat(parameters('virtualNetworks_ProjectVnet_name'), '/App_Subnet')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Network/virtualNetworks', parameters('virtualNetworks_ProjectVnet_name'))]"
+            ],
+            "properties": {
+                "addressPrefixes": [
+                    "10.1.1.0/24"
+                ],
+                "networkSecurityGroup": {
+                    "id": "[parameters('networkSecurityGroups_App_NSG_externalid')]"
+                },
+                "delegations": [],
+                "privateEndpointNetworkPolicies": "Disabled",
+                "privateLinkServiceNetworkPolicies": "Enabled"
+            }
+        },
+        {
+            "type": "Microsoft.Network/virtualNetworks/subnets",
+            "apiVersion": "2024-01-01",
+            "name": "[concat(parameters('virtualNetworks_ProjectVnet_name'), '/AzureBastionSubnet')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Network/virtualNetworks', parameters('virtualNetworks_ProjectVnet_name'))]"
+            ],
+            "properties": {
+                "addressPrefix": "10.1.4.0/26",
+                "delegations": [],
+                "privateEndpointNetworkPolicies": "Disabled",
+                "privateLinkServiceNetworkPolicies": "Enabled"
+            }
+        },
+        {
+            "type": "Microsoft.Network/virtualNetworks/subnets",
+            "apiVersion": "2024-01-01",
+            "name": "[concat(parameters('virtualNetworks_ProjectVnet_name'), '/Database_Subnet')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Network/virtualNetworks', parameters('virtualNetworks_ProjectVnet_name'))]"
+            ],
+            "properties": {
+                "addressPrefixes": [
+                    "10.1.2.0/24"
+                ],
+                "networkSecurityGroup": {
+                    "id": "[parameters('networkSecurityGroups_Database_NSG_externalid')]"
+                },
+                "delegations": [],
+                "privateEndpointNetworkPolicies": "Disabled",
+                "privateLinkServiceNetworkPolicies": "Enabled"
+            }
+        },
+        {
+            "type": "Microsoft.Network/virtualNetworks/subnets",
+            "apiVersion": "2024-01-01",
+            "name": "[concat(parameters('virtualNetworks_ProjectVnet_name'), '/Management_Subnet')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Network/virtualNetworks', parameters('virtualNetworks_ProjectVnet_name'))]"
+            ],
+            "properties": {
+                "addressPrefixes": [
+                    "10.1.3.0/24"
+                ],
+                "networkSecurityGroup": {
+                    "id": "[parameters('networkSecurityGroups_Management_NSG_externalid')]"
+                },
+                "delegations": [],
+                "privateEndpointNetworkPolicies": "Disabled",
+                "privateLinkServiceNetworkPolicies": "Enabled"
+            }
+        }
+    ]
+}
