@@ -6,7 +6,7 @@ Objective:
 
 Create a segmented Azure network with different subnets for application, database, and management layers. 
 Using RBAC to control user access to resources within each network layer. 
-This project demonstrates secure resource segmentation and precise access control within an Azure environment.#
+This project demonstrates secure resource segmentation and precise access control within an Azure environment.
 
 We'll start off this project by creating a VNET with 3 subnets, 1 for each layer. These layers will be App, Database and Management.
 The IP for the subnets are as followed:
