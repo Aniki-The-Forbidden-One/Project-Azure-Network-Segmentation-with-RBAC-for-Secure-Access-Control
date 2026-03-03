@@ -10,12 +10,20 @@ This project demonstrates secure resource segmentation and precise access contro
 
 We'll start off this project by creating a VNET with 3 subnets, 1 for each layer. These layers will be App, Database and Management.
 The IP for the subnets are as followed:
+
 App_Subnet - 10.1.1.0/24
+
 Database_Subnet - 10/1/2/0/24
+
 Management_Subnet - 10.1.3.0/24
+
+<p align="center">
+<img src="https://github.com/Aniki-The-Forbidden-One/Project-Azure-Network-Segmentation-with-RBAC-for-Secure-Access-Control/blob/main/Screenshots/(p1)%20VET%20and%20subnets.png?raw=true"/>
+</p>
 
 Next I'll create 3 NSGs and associate them with the appropriate subnets and apply some basic rules to the NSGs.
 The basic rules for each NSGs are as followed:
+
 App NSG - Deny all other inbound traffic at 200 piority, Allow port 80 (HTTP) and 443 (HTTPS) with 100 piority.
 Database NSG - Deny all other inbound traffic at 200 piority, Allow App to connect to database via port 3306 (MySQL) 
 at 100 piority. *port 1433 if SQL Server*
@@ -61,3 +69,7 @@ Future Enhancements
 Re-enable Azure Bastion for secure VM access when budget allows.
 Expand RBAC roles to include automation tools (e.g., deploying CI/CD pipelines).
 Add monitoring for cost management and budgeting.
+
+<p align="center">
+<img src=""/>
+</p>
