@@ -21,17 +21,25 @@ Management_Subnet - 10.1.3.0/24
 <img src="https://github.com/Aniki-The-Forbidden-One/Project-Azure-Network-Segmentation-with-RBAC-for-Secure-Access-Control/blob/main/Screenshots/(p1)%20VET%20and%20subnets.png?raw=true"/>
 </p>
 
-Next I'll create 3 NSGs and associate them with the appropriate subnets and apply some basic rules to the NSGs.
-The basic rules for each NSGs are as followed:
+Next I'll create 3 NSGs so we can filter network traffic between the resources within our virtual networks: 
+<p align="center">
+<img src="https://github.com/Aniki-The-Forbidden-One/Project-Azure-Network-Segmentation-with-RBAC-for-Secure-Access-Control/blob/main/Screenshots/(p2)%20NSGs.png?raw=true"/>
+</p>
+
+Next we'll associate them with the appropriate subnets:
+
+Next we'll apply some basic rules for each NSGs as followed:
 
 App NSG - Deny all other inbound traffic at 200 piority, Allow port 80 (HTTP) and 443 (HTTPS) with 100 piority.
+
 Database NSG - Deny all other inbound traffic at 200 piority, Allow App to connect to database via port 3306 (MySQL) 
 at 100 piority. *port 1433 if SQL Server*
-Management NSG - Deny all other inbound traffic at 200 piority, we will use Azure bastion for administrative access.
 
+Management NSG - Deny all other inbound traffic at 200 piority, we will use Azure bastion for administrative access.
 before we continue i'll set up bastion for the VNET, we'll deploy some VMs later on.
 
 Next I'll be setting up some security groups via Entra ID (formerly Azure AD).
+
 3 security groups will be set up. App Admins, Database Admins, Management Admins.
 
 After this we shall use Access Control (IAM) to add role assignment for the security groups.
