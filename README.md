@@ -132,8 +132,3 @@ Add monitoring for cost management and budgeting.
 Topology of this project.
 
 <img width="480" height="375" alt="image" src="https://github.com/user-attachments/assets/3f5693bc-a2a2-4ea0-9141-f686b7e4b7c0" />
-
-
-<p align="center">
-<img src=""/>
-</p>
